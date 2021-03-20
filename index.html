@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Are we in the matrix ?</title>
+    <style>
+      body {  background-color: #000000; : 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      #form { color : green ; background-color:#000000; padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); color: rgb(55, 185, 3); }
+      #input {background-color:#000000; border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { color : green ; outline: none !important;}
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages {color : green; list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(odd) { background: #000000; }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" autofocus/><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+
+<script>
+var connected = false;
+var socket = io();
+var room = '';
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (input.value) {
+    socket.emit('chat message', input.value);
+    input.value = '';
+  }
+});
+
+socket.on('chat message', function(msg) {
+  room = data.room;
+  show_chat_window(data.name);
+/*   var item = document.createElement('li');
+  item.textContent = msg;
+  messages.appendChild(item);
+  window.scrollTo(0, document.body.scrollHeight); */
+});
+socket.on('chat end', function(data) {
+    socket.leave(room); // it's possible to leave from both server and client, hoever it is better to be done by the client in this case
+    room = '';
+});
+var send_message = function(text) { // method, which you will call when user hits enter in input field
+    if (connected) socket.emit('message', {'text': text});
+};
+var leave_chat = function() { // call this when user want to end current chat
+    if (connected) {
+        socket.emit('leave room');
+        socket.leave(room);
+        room = '';
+    }}
+</script>
+
+  </body>
+</html>
